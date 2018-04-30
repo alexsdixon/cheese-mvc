@@ -9,12 +9,14 @@ import org.springframework.web.bind.annotation.RequestParam;
 
 import javax.servlet.http.HttpServletRequest;
 import java.util.ArrayList;
+import java.util.HashMap;
+
 
 @Controller
 @RequestMapping("cheese")
 public class CheeseController {
 
-    static ArrayList<String> cheeses = new ArrayList<>();
+    static HashMap<String, String> cheeses = new HashMap<>();
 
     @RequestMapping(value = "")
     public String index(Model model) {
@@ -32,11 +34,33 @@ public class CheeseController {
     }
 
     @RequestMapping(value = "add", method = RequestMethod.POST)
-    public String processAddCheeseForm(@RequestParam String cheeseName) {
-
-            cheeses.add(cheeseName);
+    public String processAddCheeseForm(@RequestParam String cheeseName, @RequestParam String cheeseInfo, Model model) {
+        if (cheeseName.equals("")) {
+            String error = "Cheese Name is needed";
+            model.addAttribute("error", error);
+            return "cheese/add";
+        } else {
+            cheeses.put(cheeseName, cheeseInfo);
             return "redirect:";
+        }
 
     }
 
+    @RequestMapping(value = "remove", method = RequestMethod.GET)
+    public String displayRemoveCheeseForm(Model model) {
+
+        model.addAttribute("cheeses", cheeses);
+        model.addAttribute("title", "Remove Cheese");
+        return "cheese/remove";
+
+    }
+
+
+    @RequestMapping(value = "remove", method = RequestMethod.POST)
+    public String processRemoveCheeseForm(@RequestParam ArrayList<String> cheeseName) {
+        for (String cheese : cheeseName) {
+            cheeses.remove(cheese);
+        }
+        return "redirect:";
+    }
 }
