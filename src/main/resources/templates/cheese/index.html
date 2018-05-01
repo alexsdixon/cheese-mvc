@@ -10,7 +10,8 @@
     <p th:unless="${cheeses} and ${cheeses.size()}">no cheese :(</p>
     <ul>
         <li th:each="cheese : ${cheeses}">
-            <span th:text="${cheese.key} + ': ' + ${cheese.value}"></span>
+            <span th:text="${cheese.getName()} + ': ' + ${cheese.getDescription()}"></span>
+            <a th:href="@{/cheese/remove(cheese=${cheese.getName()})}">Remove</a>
         </li>
     </ul>
 </div>
